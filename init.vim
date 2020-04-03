@@ -80,9 +80,9 @@ nnoremap <C-H> <C-W><C-H>
 " correct ident on paste
 :nnoremap p p=`]
 
-let g:nnn#set_default_mappings = 0
+let g:nnn#set_default_mappings = 1 
 nnoremap <silent> <C-O> :NnnPicker<CR>
-let g:nnn#layout = { 'left': '~20%' } 
+let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debug' } } 
 let g:nnn#action = {
       \ '<c-t>': 'tab split',
       \ '<c-x>': 'split',
