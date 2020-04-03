@@ -39,7 +39,8 @@ Plug 'ap/vim-css-color'
 
 " Navigation
 " Plug 'preservim/nerdtree'
-Plug 'vifm/vifm.vim'
+" Plug 'vifm/vifm.vim'
+Plug 'mcchrish/nnn.vim'
 call plug#end()
 
 set regexpengine=1
@@ -87,7 +88,15 @@ nnoremap <C-H> <C-W><C-H>
 " let g:NERDTreeMinimalUI = 1
 " let g:NERDTreeDirArrows = 1
 
-nmap <silent> <C-O> :VsplitVifm<CR> 
+" nmap <silent> <C-O> :VsplitVifm<CR> 
+
+let g:nnn#set_default_mappings = 0
+nnoremap <silent> <C-O> :NnnPicker '%:p:h'<CR>
+let g:nnn#layout = { 'left': '~20%' } 
+let g:nnn#action = {
+      \ '<c-t>': 'tab split',
+      \ '<c-x>': 'split',
+      \ '<c-v>': 'vsplit' }
 
 nnoremap <C-P> :GFiles<CR>
 
@@ -104,7 +113,8 @@ function! s:ag_git_root(query, ...)
 endfunction
 command! -bang -nargs=* GAg
       \ call s:ag_git_root(<q-args>, <bang>0)
-nnoremap <C-S-F> :GAg<CR>
+" nnoremap <C-F> :GAg<CR>
+nnoremap <C-F> :Rg<CR>
 
 " copy paste clipboard
 nnoremap <C-y> "+y
@@ -183,4 +193,4 @@ let g:python3_host_prog='/usr/local/bin/python3'
 
 let g:loaded_netrw = 1
 let g:loaded_netrwPlugin = 1
-let g:vifm_replace_netrw = 1
+let g:nnn#replace_netrw = 1
