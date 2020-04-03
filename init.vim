@@ -24,7 +24,6 @@ Plug 'maximbaz/lightline-ale'
 Plug 'dense-analysis/ale'
 
 " Autocomplete
-" Plug 'ajh17/vimcompletesme'
 Plug 'ncm2/ncm2'
 Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2-bufword'
@@ -38,8 +37,6 @@ Plug 'mxw/vim-jsx'
 Plug 'ap/vim-css-color'
 
 " Navigation
-" Plug 'preservim/nerdtree'
-" Plug 'vifm/vifm.vim'
 Plug 'mcchrish/nnn.vim'
 call plug#end()
 
@@ -83,15 +80,8 @@ nnoremap <C-H> <C-W><C-H>
 " correct ident on paste
 :nnoremap p p=`]
 
-" nmap <silent> <C-O> :NERDTreeToggle<CR>
-" let g:NERDTreeWinSize=30
-" let g:NERDTreeMinimalUI = 1
-" let g:NERDTreeDirArrows = 1
-
-" nmap <silent> <C-O> :VsplitVifm<CR> 
-
 let g:nnn#set_default_mappings = 0
-nnoremap <silent> <C-O> :NnnPicker '%:p:h'<CR>
+nnoremap <silent> <C-O> :NnnPicker<CR>
 let g:nnn#layout = { 'left': '~20%' } 
 let g:nnn#action = {
       \ '<c-t>': 'tab split',
@@ -100,20 +90,6 @@ let g:nnn#action = {
 
 nnoremap <C-P> :GFiles<CR>
 
-let s:git_path = substitute(system("git rev-parse --show-toplevel 2>/dev/null"), '\n', '', '')
-function! s:ag_git_root(query, ...)
-  if type(a:query) != type('')
-    return s:warn('Invalid query argument')
-  endif
-  let query = empty(a:query) ? '^(?=.)' : a:query
-  let args = copy(a:000)
-  let ag_opts = len(args) > 1 && type(args[0]) == s:TYPE.string ? remove(args, 0) : ''
-  let command = ag_opts . ' ' . fzf#shellescape(query) . ' ' . s:git_path
-  return call('fzf#vim#ag_raw', insert(args, command, 0))
-endfunction
-command! -bang -nargs=* GAg
-      \ call s:ag_git_root(<q-args>, <bang>0)
-" nnoremap <C-F> :GAg<CR>
 nnoremap <C-F> :Rg<CR>
 
 " copy paste clipboard
