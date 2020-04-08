@@ -36,6 +36,10 @@ Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'ap/vim-css-color'
 
+" Ruby
+Plug 'vim-ruby/vim-ruby'
+Plug 'tpope/vim-rails'
+
 " Navigation
 Plug 'mcchrish/nnn.vim'
 call plug#end()
