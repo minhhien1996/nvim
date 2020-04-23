@@ -1,16 +1,25 @@
 call plug#begin('~/.config/nvim/plugged')
 " UI
 Plug 'morhetz/gruvbox'
+Plug 'plasticboy/vim-markdown'
+
 Plug 'jacoborus/tender.vim'
+Plug 'mhartington/oceanic-next'
+Plug 'dracula/vim', { 'as': 'dracula' }
+
 Plug 'Yggdroot/indentLine'
 Plug 'jparise/vim-graphql'
 Plug 'jiangmiao/auto-pairs'
+Plug 'tpope/vim-surround'
 
 Plug 'google/protobuf'
+Plug 'uber/prototool', { 'rtp':'vim/prototool' }
 
 Plug 'djoshea/vim-autoread'
 
 Plug 'scrooloose/nerdcommenter'
+
+Plug 'andrewradev/splitjoin.vim'
 
 " fuzi search
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -23,13 +32,20 @@ Plug 'maximbaz/lightline-ale'
 
 Plug 'dense-analysis/ale'
 
+Plug 'airblade/vim-gitgutter'
+
 " Autocomplete
 Plug 'ncm2/ncm2'
 Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
 Plug 'ncm2/ncm2-tern',  {'do': 'npm install'}
+Plug 'fgrsnau/ncm2-otherbuf'
 
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 
 " Javascript
 Plug 'pangloss/vim-javascript'
@@ -41,9 +57,15 @@ Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-rails'
 
 " Navigation
-Plug 'mcchrish/nnn.vim'
+Plug 'preservim/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+
+" motion
+Plug 'justinmk/vim-sneak'
+
 call plug#end()
 
+syntax enable
 set regexpengine=1
 set autoread 
 set ruler
@@ -61,6 +83,17 @@ set scrolloff=15
 set smartcase
 set ignorecase
 set lazyredraw
+set foldmethod=syntax
+set wrap!
+
+" let g:sneak#label = 1
+" let g:sneak#s_next = 1
+
+"for LanguageClient
+set hidden
+let g:LanguageClient_serverCommands = {
+    \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+    \ }
 
 augroup numbertoggle
   autocmd!
@@ -74,23 +107,19 @@ autocmd BufEnter * call ncm2#enable_for_buffer()
 set completeopt=noinsert,menuone,noselect
 
 inoremap jj <Esc>
-nnoremap <Space> :
 
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
+" split join
+nnoremap <C-S> gS<C-S>
+nnoremap <C-B> gJ<C-D>
+
 " correct ident on paste
 :nnoremap p p=`]
 
-let g:nnn#set_default_mappings = 1 
-nnoremap <silent> <C-O> :NnnPicker<CR>
-let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debug' } } 
-let g:nnn#action = {
-      \ '<c-t>': 'tab split',
-      \ '<c-x>': 'split',
-      \ '<c-v>': 'vsplit' }
 
 nnoremap <C-P> :GFiles<CR>
 
@@ -114,25 +143,30 @@ vnoremap <A-k> :m '<-2<CR>gv=gv
 nmap // <leader>c<space>
 vmap // <leader>c<space>
 
- " Use <TAB> to select the popup menu:
+" Use <TAB> to select the popup menu:
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 let g:gruvbox_contrast_dark="hard"
 let g:indentLine_color_term=240
-colorscheme tender
+" colorscheme tender
+" colorscheme OceanicNext
+colorscheme dracula
+hi CursorLine gui=underline cterm=underline ctermfg=None guifg=None
 
 " ale linter
 let g:ale_linters = {
 \   'javascript': ['eslint'],
 \   'ruby': ['rubocop'],
+\   'proto': ['prototool-lint'],
 \}
 
 let g:ale_fixers = {
 \   'javascript': ['eslint'],
 \   'ruby': ['rubocop'],
 \}
+" let g:ale_ruby_rubocop_options = '--lint'
 let g:ale_fix_on_save = 1
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
@@ -142,6 +176,10 @@ highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 " Commenter configs
 let g:NERDCompactSexyComs = 1
 let g:NERDSpaceDelims = 1
+let g:NERDDefaultAlign = 'left'
+let g:NERDCommentEmptyLines = 1
+let g:NERDTrimTrailingWhitespace = 1
+
 
 
 " Statusline configs
@@ -180,4 +218,11 @@ let g:python3_host_prog='/usr/local/bin/python3'
 
 let g:loaded_netrw = 1
 let g:loaded_netrwPlugin = 1
-let g:nnn#replace_netrw = 1
+
+let g:ruby_fold = 1
+let g:ruby_foldable_groups = 'def # describe { do'
+
+
+map <C-O> :NERDTreeToggle<CR>
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
