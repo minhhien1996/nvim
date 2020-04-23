@@ -59,6 +59,7 @@ Plug 'tpope/vim-rails'
 " Navigation
 Plug 'preservim/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'ryanoasis/vim-devicons'
 
 " motion
 Plug 'justinmk/vim-sneak'
@@ -85,6 +86,7 @@ set ignorecase
 set lazyredraw
 set foldmethod=syntax
 set wrap!
+set encoding=UTF-8
 
 " let g:sneak#label = 1
 " let g:sneak#s_next = 1
