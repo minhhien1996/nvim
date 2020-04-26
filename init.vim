@@ -39,7 +39,6 @@ Plug 'ncm2/ncm2'
 Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-tern',  {'do': 'npm install'}
 Plug 'fgrsnau/ncm2-otherbuf'
 
 Plug 'autozimu/LanguageClient-neovim', {
@@ -85,16 +84,20 @@ set smartcase
 set ignorecase
 set lazyredraw
 set foldmethod=syntax
-set wrap!
+" set wrap!
 set encoding=UTF-8
+set autowrite
 
-" let g:sneak#label = 1
-" let g:sneak#s_next = 1
+let g:sneak#label = 1
+let g:sneak#s_next = 1
 
 "for LanguageClient
 set hidden
 let g:LanguageClient_serverCommands = {
     \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+    \ 'javascript': ['typescript-language-server', '--stdio', '--log-level 1'],
+    \ 'javascript.jsx': ['typescript-language-server', '--stdio', '--log-level 1'],
+    \ 'typescript': ['typescript-language-server', '--stdio', '--log-level 1'],
     \ }
 
 augroup numbertoggle
@@ -108,12 +111,16 @@ autocmd BufEnter * call ncm2#enable_for_buffer()
 " IMPORTANT: :help Ncm2PopupOpen for more information
 set completeopt=noinsert,menuone,noselect
 
+
 inoremap jj <Esc>
 
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+
+nnoremap <C-_> :nohl<CR>
+nnoremap <C-\> :vsplit<CR>
 
 " split join
 nnoremap <C-S> gS<C-S>
@@ -186,7 +193,7 @@ let g:NERDTrimTrailingWhitespace = 1
 
 " Statusline configs
 let g:lightline = {}
-let g:lightline.colorscheme = 'tender'
+let g:lightline.colorscheme = 'dracula'
 let g:lightline.component_function = {
       \   'gitbranch': 'fugitive#head',
       \   'gutentags': 'gutentags#statusline'
@@ -224,7 +231,23 @@ let g:loaded_netrwPlugin = 1
 let g:ruby_fold = 1
 let g:ruby_foldable_groups = 'def # describe { do'
 
+let g:LanguageClient_diagnosticsEnable = 0
+let g:LanguageClient_diagnosticsMaxSeverity = "Error"
 
-map <C-O> :NERDTreeToggle<CR>
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
+let NERDTreeShowHidden=1
+" Toggle NERDTree
+function! OpenNerdTree()
+  " if nerdtreefind if nerdtree already opened
+  if &modifiable && strlen(expand('%')) > 0 && !&diff
+    NERDTreeFind
+  else
+    NERDTreeToggle
+  endif
+endfunction
+nmap <C-O> :call OpenNerdTree()<CR>
+
+let NERDTreeHijackNetrw = 1
+let NERDTreeIgnore = ['^node_modules$[[dir]]']
+let NERDTreeQuitOnOpen = 1
+let NERDTreeWinSize = 40
+let NERDTreeShowLineNumbers=1
