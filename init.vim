@@ -110,6 +110,7 @@ augroup END
 autocmd BufEnter * call ncm2#enable_for_buffer()
 " IMPORTANT: :help Ncm2PopupOpen for more information
 set completeopt=noinsert,menuone,noselect
+let g:ncm2#complete_length=2
 
 
 inoremap jj <Esc>
@@ -246,8 +247,10 @@ function! OpenNerdTree()
 endfunction
 nmap <C-O> :call OpenNerdTree()<CR>
 
-let NERDTreeHijackNetrw = 1
-let NERDTreeIgnore = ['^node_modules$[[dir]]']
-let NERDTreeQuitOnOpen = 1
-let NERDTreeWinSize = 40
-let NERDTreeShowLineNumbers=1
+let g:NERDTreeHijackNetrw = 1
+let g:NERDTreeIgnore = ['^node_modules$[[dir]]']
+" let g:NERDTreeQuitOnOpen = 1
+let g:NERDTreeWinSize = 40
+let g:NERDTreeShowLineNumbers=1
+let g:NERDTreeMapOpenVSplit = '<C-V>'
+let g:NERDTreeMapOpenSplit = '<C-X>'
