@@ -1,16 +1,18 @@
 call plug#begin('~/.config/nvim/plugged')
 " UI
 Plug 'morhetz/gruvbox'
-Plug 'plasticboy/vim-markdown'
 
 Plug 'jacoborus/tender.vim'
 Plug 'mhartington/oceanic-next'
 Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'sonph/onehalf'
 
 Plug 'Yggdroot/indentLine'
 Plug 'jparise/vim-graphql'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
+Plug 'terryma/vim-smooth-scroll'
+Plug '907th/vim-auto-save'
 
 Plug 'google/protobuf'
 Plug 'uber/prototool', { 'rtp':'vim/prototool' }
@@ -50,29 +52,35 @@ Plug 'autozimu/LanguageClient-neovim', {
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'ap/vim-css-color'
+Plug 'jparise/vim-graphql'
 
 " Ruby
-Plug 'vim-ruby/vim-ruby'
-Plug 'tpope/vim-rails'
+" Plug 'vim-ruby/vim-ruby'
+" Plug 'tpope/vim-rails'
 
 " Navigation
 Plug 'preservim/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'ryanoasis/vim-devicons'
 
-" motion
-Plug 'justinmk/vim-sneak'
+" Other language
+Plug 'plasticboy/vim-markdown'
+Plug 'stephpy/vim-yaml'
+
+" Dim inactive
+Plug 'TaDaa/vimade'
 
 call plug#end()
 
-syntax enable
+syntax on
+set nocompatible
 set regexpengine=1
 set autoread 
 set ruler
 set number
 set expandtab
 set cursorline
-set colorcolumn=80,120
+" set colorcolumn=120
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
@@ -83,10 +91,15 @@ set scrolloff=15
 set smartcase
 set ignorecase
 set lazyredraw
-set foldmethod=syntax
+set ttyfast
+set foldmethod=indent
 " set wrap!
 set encoding=UTF-8
 set autowrite
+set cursorline!
+set synmaxcol=128
+set re=1
+syntax sync minlines=256
 
 let g:sneak#label = 1
 let g:sneak#s_next = 1
@@ -100,21 +113,27 @@ let g:LanguageClient_serverCommands = {
     \ 'typescript': ['typescript-language-server', '--stdio', '--log-level 1'],
     \ }
 
-augroup numbertoggle
-  autocmd!
-  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
-  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
-augroup END
+" augroup numbertoggle
+"   autocmd!
+"   autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+"   autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+" augroup END
 
 " enable ncm2 for all buffers
 autocmd BufEnter * call ncm2#enable_for_buffer()
+autocmd BufEnter * silent! ncm2#blacklist_for_buffer(['cwdpath', 'rootpath'])
 " IMPORTANT: :help Ncm2PopupOpen for more information
 set completeopt=noinsert,menuone,noselect
 let g:ncm2#complete_length=2
 
 
+" smooth scroll
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll*2, 0, 4)<CR>
+
 inoremap jj <Esc>
 
+" split Navigation
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
@@ -162,8 +181,14 @@ let g:gruvbox_contrast_dark="hard"
 let g:indentLine_color_term=240
 " colorscheme tender
 " colorscheme OceanicNext
-colorscheme dracula
-hi CursorLine gui=underline cterm=underline ctermfg=None guifg=None
+" colorscheme dracula
+highlight CursorLine gui=underline cterm=underline ctermfg=None guifg=None
+highlight ColorColumn ctermbg=darkgray guibg=darkgray
+highlight MatchParen cterm=underline ctermbg=none ctermfg=green
+
+call matchadd('ColorColumn', '\%81v.', 100)
+
+set fcs=eob:\ 
 
 " ale linter
 let g:ale_linters = {
@@ -176,10 +201,15 @@ let g:ale_fixers = {
 \   'javascript': ['eslint'],
 \   'ruby': ['rubocop'],
 \}
-" let g:ale_ruby_rubocop_options = '--lint'
+
 let g:ale_fix_on_save = 1
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
+let g:ale_lint_on_text_changed = 1
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_insert_leave = 1
+let g:ale_lint_on_enter = 1
+
 highlight ALEErrorSign ctermbg=NONE ctermfg=red
 highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 
@@ -229,8 +259,8 @@ let g:python3_host_prog='/usr/local/bin/python3'
 let g:loaded_netrw = 1
 let g:loaded_netrwPlugin = 1
 
-let g:ruby_fold = 1
-let g:ruby_foldable_groups = 'def # describe { do'
+" let g:ruby_fold = 1
+" let g:ruby_foldable_groups = 'def # describe { do'
 
 let g:LanguageClient_diagnosticsEnable = 0
 let g:LanguageClient_diagnosticsMaxSeverity = "Error"
@@ -250,7 +280,18 @@ nmap <C-O> :call OpenNerdTree()<CR>
 let g:NERDTreeHijackNetrw = 1
 let g:NERDTreeIgnore = ['^node_modules$[[dir]]']
 " let g:NERDTreeQuitOnOpen = 1
-let g:NERDTreeWinSize = 40
+let g:NERDTreeWinSize = 30
 let g:NERDTreeShowLineNumbers=1
 let g:NERDTreeMapOpenVSplit = '<C-V>'
 let g:NERDTreeMapOpenSplit = '<C-X>'
+
+hi Directory guifg=cyan ctermfg=cyan
+
+let g:auto_save = 1
+let g:updatetime = 1000
+let g:auto_save_events = ['CursorHold']
+
+let g:diminactive_enable_focus = 1
+
+let g:vimade = {}
+let g:vimade.detecttermcolors = 1
