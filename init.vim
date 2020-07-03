@@ -1,11 +1,5 @@
 call plug#begin('~/.config/nvim/plugged')
-" UI
-Plug 'morhetz/gruvbox'
-
-Plug 'jacoborus/tender.vim'
-Plug 'mhartington/oceanic-next'
-Plug 'dracula/vim', { 'as': 'dracula' }
-Plug 'sonph/onehalf'
+Plug 'konfekt/fastfold'
 
 Plug 'Yggdroot/indentLine'
 Plug 'jparise/vim-graphql'
@@ -13,6 +7,9 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
 Plug 'terryma/vim-smooth-scroll'
 Plug '907th/vim-auto-save'
+
+" auto resize focus window for edit
+Plug 'justincampbell/vim-eighties'
 
 Plug 'google/protobuf'
 Plug 'uber/prototool', { 'rtp':'vim/prototool' }
@@ -55,8 +52,8 @@ Plug 'ap/vim-css-color'
 Plug 'jparise/vim-graphql'
 
 " Ruby
-" Plug 'vim-ruby/vim-ruby'
-" Plug 'tpope/vim-rails'
+Plug 'vim-ruby/vim-ruby'
+Plug 'tpope/vim-rails'
 
 " Navigation
 Plug 'preservim/nerdtree'
@@ -92,13 +89,14 @@ set smartcase
 set ignorecase
 set lazyredraw
 set ttyfast
-set foldmethod=indent
+set foldmethod=syntax
 " set wrap!
 set encoding=UTF-8
 set autowrite
 set cursorline!
 set synmaxcol=128
 set re=1
+set noswapfile
 syntax sync minlines=256
 
 let g:sneak#label = 1
@@ -259,8 +257,8 @@ let g:python3_host_prog='/usr/local/bin/python3'
 let g:loaded_netrw = 1
 let g:loaded_netrwPlugin = 1
 
-" let g:ruby_fold = 1
-" let g:ruby_foldable_groups = 'def # describe { do'
+let g:ruby_fold = 1
+let g:ruby_foldable_groups = 'def # describe { do ('
 
 let g:LanguageClient_diagnosticsEnable = 0
 let g:LanguageClient_diagnosticsMaxSeverity = "Error"
@@ -295,3 +293,9 @@ let g:diminactive_enable_focus = 1
 
 let g:vimade = {}
 let g:vimade.detecttermcolors = 1
+
+let g:eighties_enabled = 1
+let g:eighties_minimum_width = 100
+let g:eighties_extra_width = 0 " Increase this if you want some extra room
+let g:eighties_compute = 1 " Disable this if you just want the minimum + extra
+let g:eighties_bufname_additional_patterns = ['fugitiveblame'] " Defaults to [], 'fugitiveblame' is only an example. Takes a comma delimited list of bufnames as strings.
