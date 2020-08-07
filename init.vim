@@ -3,13 +3,12 @@ Plug 'konfekt/fastfold'
 
 Plug 'Yggdroot/indentLine'
 Plug 'jparise/vim-graphql'
-Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
 Plug 'terryma/vim-smooth-scroll'
 Plug '907th/vim-auto-save'
+Plug 'townk/vim-autoclose'
 
-" auto resize focus window for edit
-Plug 'justincampbell/vim-eighties'
+Plug 'mklabs/split-term.vim'
 
 Plug 'google/protobuf'
 Plug 'uber/prototool', { 'rtp':'vim/prototool' }
@@ -18,11 +17,10 @@ Plug 'djoshea/vim-autoread'
 
 Plug 'scrooloose/nerdcommenter'
 
-Plug 'andrewradev/splitjoin.vim'
-
 " fuzi search
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'jesseleite/vim-agriculture'
 
 " Statusline
 Plug 'itchyny/lightline.vim'
@@ -53,7 +51,6 @@ Plug 'jparise/vim-graphql'
 
 " Ruby
 Plug 'vim-ruby/vim-ruby'
-Plug 'tpope/vim-rails'
 
 " Navigation
 Plug 'preservim/nerdtree'
@@ -67,9 +64,12 @@ Plug 'stephpy/vim-yaml'
 " Dim inactive
 Plug 'TaDaa/vimade'
 
+Plug 'roman/golden-ratio'
+
 call plug#end()
 
 syntax on
+set wildmode=longest,list,full
 set nocompatible
 set regexpengine=1
 set autoread 
@@ -99,8 +99,8 @@ set re=1
 set noswapfile
 syntax sync minlines=256
 
-let g:sneak#label = 1
-let g:sneak#s_next = 1
+let g:vimade = {}
+let g:vimade.detecttermcolors = 1
 
 "for LanguageClient
 set hidden
@@ -120,6 +120,9 @@ let g:LanguageClient_serverCommands = {
 " enable ncm2 for all buffers
 autocmd BufEnter * call ncm2#enable_for_buffer()
 autocmd BufEnter * silent! ncm2#blacklist_for_buffer(['cwdpath', 'rootpath'])
+
+autocmd WinEnter * :GoldenRatioResize
+
 " IMPORTANT: :help Ncm2PopupOpen for more information
 set completeopt=noinsert,menuone,noselect
 let g:ncm2#complete_length=2
@@ -139,10 +142,6 @@ nnoremap <C-H> <C-W><C-H>
 
 nnoremap <C-_> :nohl<CR>
 nnoremap <C-\> :vsplit<CR>
-
-" split join
-nnoremap <C-S> gS<C-S>
-nnoremap <C-B> gJ<C-D>
 
 " correct ident on paste
 :nnoremap p p=`]
@@ -183,6 +182,8 @@ let g:indentLine_color_term=240
 highlight CursorLine gui=underline cterm=underline ctermfg=None guifg=None
 highlight ColorColumn ctermbg=darkgray guibg=darkgray
 highlight MatchParen cterm=underline ctermbg=none ctermfg=green
+highlight Visual  ctermfg=black ctermbg=cyan gui=none
+" highlight Directory guifg=cyan ctermfg=cyan
 
 call matchadd('ColorColumn', '\%81v.', 100)
 
@@ -199,6 +200,7 @@ let g:ale_fixers = {
 \   'javascript': ['eslint'],
 \   'ruby': ['rubocop'],
 \}
+let g:ale_ruby_rubocop_options = '--safe-auto-correct'
 
 let g:ale_fix_on_save = 1
 let g:ale_sign_error = '✘'
@@ -208,8 +210,8 @@ let g:ale_lint_on_save = 1
 let g:ale_lint_on_insert_leave = 1
 let g:ale_lint_on_enter = 1
 
-highlight ALEErrorSign ctermbg=NONE ctermfg=red
-highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
+" highlight ALEErrorSign ctermbg=NONE ctermfg=red
+" highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 
 " Commenter configs
 let g:NERDCompactSexyComs = 1
@@ -218,11 +220,9 @@ let g:NERDDefaultAlign = 'left'
 let g:NERDCommentEmptyLines = 1
 let g:NERDTrimTrailingWhitespace = 1
 
-
-
 " Statusline configs
 let g:lightline = {}
-let g:lightline.colorscheme = 'dracula'
+" let g:lightline.colorscheme = 'dracula'
 let g:lightline.component_function = {
       \   'gitbranch': 'fugitive#head',
       \   'gutentags': 'gutentags#statusline'
@@ -278,24 +278,19 @@ nmap <C-O> :call OpenNerdTree()<CR>
 let g:NERDTreeHijackNetrw = 1
 let g:NERDTreeIgnore = ['^node_modules$[[dir]]']
 " let g:NERDTreeQuitOnOpen = 1
-let g:NERDTreeWinSize = 30
+let g:NERDTreeWinSize = 50
 let g:NERDTreeShowLineNumbers=1
 let g:NERDTreeMapOpenVSplit = '<C-V>'
 let g:NERDTreeMapOpenSplit = '<C-X>'
 
-hi Directory guifg=cyan ctermfg=cyan
-
 let g:auto_save = 1
 let g:updatetime = 1000
-let g:auto_save_events = ['CursorHold']
+let g:auto_save_events = ['InsertLeave']
 
 let g:diminactive_enable_focus = 1
 
-let g:vimade = {}
-let g:vimade.detecttermcolors = 1
+ nmap <C-T> :80VTerm<CR>
 
-let g:eighties_enabled = 1
-let g:eighties_minimum_width = 100
-let g:eighties_extra_width = 0 " Increase this if you want some extra room
-let g:eighties_compute = 1 " Disable this if you just want the minimum + extra
-let g:eighties_bufname_additional_patterns = ['fugitiveblame'] " Defaults to [], 'fugitiveblame' is only an example. Takes a comma delimited list of bufnames as strings.
+let g:golden_ratio_exclude_nonmodifiable = 1
+
+
