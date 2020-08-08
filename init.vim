@@ -6,9 +6,9 @@ Plug 'jparise/vim-graphql'
 Plug 'tpope/vim-surround'
 Plug 'terryma/vim-smooth-scroll'
 Plug '907th/vim-auto-save'
-Plug 'townk/vim-autoclose'
+Plug 'cohama/lexima.vim'
 
-Plug 'mklabs/split-term.vim'
+Plug 'kassio/neoterm'
 
 Plug 'google/protobuf'
 Plug 'uber/prototool', { 'rtp':'vim/prototool' }
@@ -289,8 +289,13 @@ let g:auto_save_events = ['InsertLeave']
 
 let g:diminactive_enable_focus = 1
 
- nmap <C-T> :80VTerm<CR>
-
 let g:golden_ratio_exclude_nonmodifiable = 1
 
+nmap <C-T> :Topen<CR>
+let g:neoterm_default_mod = ':vertical'
+let g:neoterm_size=80
+let g:neoterm_autoscroll=1
+let g:neoterm_autoinsert=1
 
+" ESC to exit terminal mode
+tnoremap <Esc> <C-\><C-n>
