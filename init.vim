@@ -291,11 +291,15 @@ let g:diminactive_enable_focus = 1
 
 let g:golden_ratio_exclude_nonmodifiable = 1
 
-nmap <C-T> :Topen<CR>
+nmap <C-T> :Ttoggle<CR>
 let g:neoterm_default_mod = ':vertical'
 let g:neoterm_size=80
 let g:neoterm_autoscroll=1
 let g:neoterm_autoinsert=1
+let g:neoterm_keep_term_open=0
 
-" ESC to exit terminal mode
-tnoremap <Esc> <C-\><C-n>
+" ESC to exit terminal mode, but not conflict FZF
+if has("nvim")
+  au TermOpen * tnoremap <Esc> <C-\><C-N>
+  au FileType fzf tunmap <Esc>
+endif
