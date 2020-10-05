@@ -39,40 +39,49 @@ Plug 'ncm2/ncm2-path'
 Plug 'fgrsnau/ncm2-otherbuf'
 
 Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
+      \ 'branch': 'next',
+      \ 'do': 'bash install.sh',
+      \ }
 
 " Javascript
 " Plug 'pangloss/vim-javascript'
 " Plug 'mxw/vim-jsx'
 Plug 'ap/vim-css-color'
-Plug 'jparise/vim-graphql'
-Plug 'chemzqm/vim-jsx-improve'
+" Plug 'jparise/vim-graphql'
+" Plug 'chemzqm/vim-jsx-improve'
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 
 " Ruby
-Plug 'vim-ruby/vim-ruby'
+" Plug 'vim-ruby/vim-ruby'
+Plug 'sheerun/vim-polyglot'
 
 " Navigation
-Plug 'preservim/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
+" Plug 'preservim/nerdtree'
+" Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'ryanoasis/vim-devicons'
+Plug 'lambdalisue/fern.vim'
+Plug 'lambdalisue/fern-renderer-devicons.vim'
+Plug 'lambdalisue/fern-hijack.vim'
+Plug 'lambdalisue/fern-git-status.vim'
 
 " Other language
 Plug 'plasticboy/vim-markdown'
 Plug 'stephpy/vim-yaml'
 
 " Dim inactive
-Plug 'TaDaa/vimade'
+Plug 'blueyed/vim-diminactive'
 
 Plug 'camspiers/animate.vim'
 Plug 'camspiers/lens.vim'
 Plug 'antoinemadec/FixCursorHold.nvim'
 
+Plug 'justinmk/vim-sneak' 
+
 call plug#end()
 
 syntax on
+set title
+set titlestring=%{split(getcwd(),\ '/')[-1]}
 set clipboard+=unnamed  " use the same clipboards for vim and OS
 set wildmode=longest,list,full
 set nocompatible
@@ -82,7 +91,6 @@ set ruler
 set number
 set expandtab
 set cursorline
-" set colorcolumn=120
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
@@ -99,24 +107,34 @@ set foldmethod=syntax
 set encoding=UTF-8
 set autowrite
 set cursorline!
-set synmaxcol=128
+set synmaxcol=250
 set re=1
 set noswapfile
 syntax sync fromstart
 set redrawtime=10000
-" set mouse=a
+set mouse=n
+set termguicolors
+set foldlevelstart=10
+set foldlevel=10
 
-let g:vimade = {}
-let g:vimade.detecttermcolors = 1
+" let g:vimade = {}
+" let g:vimade.detecttermcolors = 1
+
+let g:diminactive_use_colorcolumn = 0
+let g:diminactive_enable_focus = 1
+let g:diminactive_use_syntax = 1
+let g:diminactive_buftype_blacklist = ['nofile', 'nowrite', 'acwrite', 'quickfix', 'help']
+let g:diminactive_filetype_blacklist = ['fern']
+
 
 "for LanguageClient
 set hidden
 let g:LanguageClient_serverCommands = {
-    \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
-    \ 'javascript': ['typescript-language-server', '--stdio', '--log-level 1'],
-    \ 'javascript.jsx': ['typescript-language-server', '--stdio', '--log-level 1'],
-    \ 'typescript': ['typescript-language-server', '--stdio', '--log-level 1'],
-    \ }
+      \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+      \ 'javascript': ['typescript-language-server', '--stdio', '--log-level 1'],
+      \ 'javascript.jsx': ['typescript-language-server', '--stdio', '--log-level 1'],
+      \ 'typescript': ['typescript-language-server', '--stdio', '--log-level 1'],
+      \ }
 
 " augroup numbertoggle
 "   autocmd!
@@ -170,30 +188,28 @@ vmap // <leader>c<space>
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-let $NVIM_TUI_ENABLE_TRUE_COLOR=0
-let g:gruvbox_contrast_dark="hard"
-let g:indentLine_color_term=240
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 highlight CursorLine gui=underline cterm=underline ctermfg=None guifg=None
 highlight ColorColumn ctermbg=darkgray guibg=darkgray
 highlight MatchParen cterm=underline ctermbg=none ctermfg=green
 highlight Visual  ctermfg=black ctermbg=cyan gui=none
 " highlight Directory guifg=cyan ctermfg=cyan
 
-call matchadd('ColorColumn', '\%81v.', 100)
+call matchadd('ColorColumn', '\%81v.', 120)
 
 set fcs=eob:\ 
 
 " ale linter
 let g:ale_linters = {
-\   'javascript': ['eslint'],
-\   'ruby': ['rubocop'],
-\   'proto': ['prototool-lint'],
-\}
+      \   'javascript': ['eslint'],
+      \   'ruby': ['rubocop'],
+      \   'proto': ['prototool-lint'],
+      \}
 
 let g:ale_fixers = {
-\   'javascript': ['eslint'],
-\   'ruby': ['rubocop'],
-\}
+      \   'javascript': ['eslint'],
+      \   'ruby': ['rubocop'],
+      \}
 let g:ale_ruby_rubocop_options = '--safe-auto-correct'
 
 let g:ale_fix_on_save = 1
@@ -247,6 +263,7 @@ let g:lightline.active = {
       \ }
 
 let g:python3_host_prog='/usr/local/bin/python3'
+let g:python_host_prog='/usr/local/bin/python2'
 
 let g:loaded_netrw = 1
 let g:loaded_netrwPlugin = 1
@@ -257,26 +274,26 @@ let g:ruby_foldable_groups = 'def # describe { do ('
 let g:LanguageClient_diagnosticsEnable = 0
 let g:LanguageClient_diagnosticsMaxSeverity = "Error"
 
-let NERDTreeShowHidden=1
+" let NERDTreeShowHidden=1
 
 " Toggle NERDTree
-function! OpenNerdTree()
-  " if nerdtreefind if nerdtree already opened
-  if &modifiable && strlen(expand('%')) > 0 && !&diff
-    NERDTreeFind
-  else
-    NERDTreeToggle
-  endif
-endfunction
-nmap <C-O> :call OpenNerdTree()<CR>
+" function! OpenNerdTree()
+"   " if nerdtreefind if nerdtree already opened
+"   if &modifiable && strlen(expand('%')) > 0 && !&diff
+"     NERDTreeFind
+"   else
+"     NERDTreeToggle
+"   endif
+" endfunction
+" nmap <C-O> :call OpenNerdTree()<CR>
 
-let g:NERDTreeHijackNetrw = 1
-let g:NERDTreeIgnore = ['^node_modules$[[dir]]']
-" let g:NERDTreeQuitOnOpen = 1
-" let g:NERDTreeWinSize = 40
-let g:NERDTreeShowLineNumbers = 1
-let g:NERDTreeMapOpenVSplit = '<C-V>'
-let g:NERDTreeMapOpenSplit = '<C-X>'
+nmap <C-O> :Fern . -drawer -reveal=% -width=40<CR>
+
+" let g:NERDTreeHijackNetrw = 1
+" let g:NERDTreeIgnore = ['^node_modules$[[dir]]']
+" let g:NERDTreeShowLineNumbers = 1
+" let g:NERDTreeMapOpenVSplit = '<C-V>'
+" let g:NERDTreeMapOpenSplit = '<C-X>'
 
 let g:auto_save = 1
 let g:auto_save_events = ['CursorHold', 'BufLeave']
@@ -305,8 +322,51 @@ endif
 
 let g:closetag_xhtml_filetypes = 'xhtml,jsx,js'
 
-let g:lens#disabled_filetypes = ['fzf']
+let g:lens#disabled_filetypes = ['fzf', 'fern']
 let g:lens#width_resize_max = 100
 let g:lens#width_resize_min = 30
 
 let g:indentLine_char = '│'
+let g:indentLine_color_term=240
+
+let g:sneak#label = 1
+
+let g:fern#renderer = "devicons"
+
+function! FernInit() abort
+  nmap <buffer><expr>
+        \ <Plug>(fern-my-open-expand-collapse)
+        \ fern#smart#leaf(
+        \   "\<Plug>(fern-action-open:select)",
+        \   "\<Plug>(fern-action-expand)",
+        \   "\<Plug>(fern-action-collapse)",
+        \ )
+  nmap <buffer> <CR> <Plug>(fern-my-open-expand-collapse)
+  nmap <buffer> n <Plug>(fern-action-new-path)
+  nmap <buffer> d <Plug>(fern-action-remove)
+  nmap <buffer> m <Plug>(fern-action-move)
+  nmap <buffer> M <Plug>(fern-action-rename)
+  nmap <buffer> h <Plug>(fern-action-hidden-toggle)
+  nmap <buffer> r <Plug>(fern-action-reload)
+  nmap <buffer> k <Plug>(fern-action-mark-toggle)
+  nmap <buffer> s <Plug>(fern-action-open:split)
+  nmap <buffer> v <Plug>(fern-action-open:vsplit)
+  nmap <buffer><nowait> < <Plug>(fern-action-leave)
+  nmap <buffer><nowait> > <Plug>(fern-action-enter)
+
+  augroup FernTypeGroup
+    autocmd! * <buffer>
+    autocmd BufEnter <buffer> silent execute "normal \<Plug>(fern-action-reload)"
+  augroup END
+endfunction
+
+augroup FernGroup
+  autocmd!
+  autocmd FileType fern call FernInit()
+augroup END
+
+let g:fern_git_status#disable_ignored    = 1
+let g:fern_git_status#disable_untracked  = 1
+let g:fern_git_status#disable_submodules = 1
+let g:fern#disable_default_mappings = 1
+let g:fern#disable_drawer_auto_winfixwidth = 1
