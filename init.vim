@@ -8,6 +8,7 @@ Plug 'tpope/vim-surround'
 Plug 'terryma/vim-smooth-scroll'
 Plug '907th/vim-auto-save'
 Plug 'cohama/lexima.vim' " auto close parentheses
+Plug 'tpope/vim-endwise'
 
 Plug 'kassio/neoterm'
 
@@ -44,15 +45,19 @@ Plug 'autozimu/LanguageClient-neovim', {
       \ }
 
 " Javascript
-" Plug 'pangloss/vim-javascript'
 " Plug 'mxw/vim-jsx'
-Plug 'ap/vim-css-color'
+" Plug 'ap/vim-css-color'
 " Plug 'jparise/vim-graphql'
-" Plug 'chemzqm/vim-jsx-improve'
+Plug 'pangloss/vim-javascript'
+Plug 'chemzqm/vim-jsx-improve'
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 
+Plug 'norcalli/nvim-colorizer.lua'
+
 " Ruby
-" Plug 'vim-ruby/vim-ruby'
+Plug 'vim-ruby/vim-ruby'
+
+" every other languages
 Plug 'sheerun/vim-polyglot'
 
 " Navigation
@@ -85,37 +90,40 @@ set titlestring=%{split(getcwd(),\ '/')[-1]}
 set clipboard+=unnamed  " use the same clipboards for vim and OS
 set wildmode=longest,list,full
 set nocompatible
-set regexpengine=1
+set regexpengine=2
 set autoread 
 set ruler
 set number
 set expandtab
-set cursorline
+" set cursorline
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 set splitbelow
 set splitright
-set number relativenumber
+" set number relativenumber
 set scrolloff=15
 set smartcase
 set ignorecase
 set lazyredraw
 set ttyfast
 set foldmethod=syntax
+set foldlevel=99
+set nofoldenable
 " set wrap!
 set encoding=UTF-8
 set autowrite
-set cursorline!
+" set cursorline!
 set synmaxcol=250
 set re=1
 set noswapfile
-syntax sync fromstart
+" syntax sync fromstart
+" syntax sync minlines=200
 set redrawtime=10000
 set mouse=n
 set termguicolors
-set foldlevelstart=10
-set foldlevel=10
+set showmatch
+
 
 " let g:vimade = {}
 " let g:vimade.detecttermcolors = 1
@@ -136,15 +144,16 @@ let g:LanguageClient_serverCommands = {
       \ 'typescript': ['typescript-language-server', '--stdio', '--log-level 1'],
       \ }
 
-" augroup numbertoggle
-"   autocmd!
-"   autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
-"   autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
-" augroup END
-
 " enable ncm2 for all buffers
 autocmd BufEnter * call ncm2#enable_for_buffer()
 autocmd BufEnter * silent! ncm2#blacklist_for_buffer(['cwdpath', 'rootpath'])
+
+
+augroup ft_rb
+    au!
+    " fix the SLOOOW syntax highlighting
+    au FileType ruby setlocal re=1 foldmethod=manual foldlevel=15
+  augroup END
 
 " IMPORTANT: :help Ncm2PopupOpen for more information
 set completeopt=noinsert,menuone,noselect
@@ -195,7 +204,8 @@ highlight MatchParen cterm=underline ctermbg=none ctermfg=green
 highlight Visual  ctermfg=black ctermbg=cyan gui=none
 " highlight Directory guifg=cyan ctermfg=cyan
 
-call matchadd('ColorColumn', '\%81v.', 120)
+" colorize the 121th char for long line notice
+call matchadd('ColorColumn', '\%121v.', -1)
 
 set fcs=eob:\ 
 
@@ -215,10 +225,10 @@ let g:ale_ruby_rubocop_options = '--safe-auto-correct'
 let g:ale_fix_on_save = 1
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
-let g:ale_lint_on_text_changed = 1
+let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_save = 1
 let g:ale_lint_on_insert_leave = 1
-let g:ale_lint_on_enter = 1
+let g:ale_lint_on_enter = 0
 
 " highlight ALEErrorSign ctermbg=NONE ctermfg=red
 " highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
@@ -268,9 +278,6 @@ let g:python_host_prog='/usr/local/bin/python2'
 let g:loaded_netrw = 1
 let g:loaded_netrwPlugin = 1
 
-let g:ruby_fold = 1
-let g:ruby_foldable_groups = 'def # describe { do ('
-
 let g:LanguageClient_diagnosticsEnable = 0
 let g:LanguageClient_diagnosticsMaxSeverity = "Error"
 
@@ -287,7 +294,7 @@ let g:LanguageClient_diagnosticsMaxSeverity = "Error"
 " endfunction
 " nmap <C-O> :call OpenNerdTree()<CR>
 
-nmap <C-O> :Fern . -drawer -reveal=% -width=40<CR>
+nmap <C-O> :Fern . -drawer -reveal=% -width=40 -keep<CR>
 
 " let g:NERDTreeHijackNetrw = 1
 " let g:NERDTreeIgnore = ['^node_modules$[[dir]]']
@@ -370,3 +377,16 @@ let g:fern_git_status#disable_untracked  = 1
 let g:fern_git_status#disable_submodules = 1
 let g:fern#disable_default_mappings = 1
 let g:fern#disable_drawer_auto_winfixwidth = 1
+
+" colorizer.lua
+lua require'colorizer'.setup()
+
+let g:ruby_fold = 1
+nmap zuz <Plug>(FastFoldUpdate)
+let g:fastfold_savehook = 0
+let g:fastfold_fdmhook = 0
+let g:fastfold_fold_command_suffixes = []
+let g:fastfold_fold_movement_commands = []
+
+let g:polyglot_disabled = ['ruby', 'javascript', 'jsx']
+let g:ruby_path="~/.rvm/bin/ruby"
