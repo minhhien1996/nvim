@@ -101,14 +101,13 @@ set shiftwidth=2
 set softtabstop=2
 set splitbelow
 set splitright
-" set number relativenumber
+set number relativenumber
 set scrolloff=15
 set smartcase
 set ignorecase
 set lazyredraw
 set ttyfast
-set foldmethod=syntax
-set foldlevel=99
+set foldmethod=indent
 set nofoldenable
 " set wrap!
 set encoding=UTF-8
@@ -150,10 +149,10 @@ autocmd BufEnter * silent! ncm2#blacklist_for_buffer(['cwdpath', 'rootpath'])
 
 
 augroup ft_rb
-    au!
-    " fix the SLOOOW syntax highlighting
-    au FileType ruby setlocal re=1 foldmethod=manual foldlevel=15
-  augroup END
+  au!
+  " fix the SLOOOW syntax highlighting
+  au FileType ruby setlocal re=1 foldmethod=indent foldlevel=15
+augroup END
 
 " IMPORTANT: :help Ncm2PopupOpen for more information
 set completeopt=noinsert,menuone,noselect
@@ -180,6 +179,7 @@ nnoremap <C-_> :nohl<CR>
 " FZF
 nnoremap <C-P> :GFiles<CR>
 nnoremap <C-F> :Rg<CR>
+nnoremap <C-B> :Buffer<CR>
 nnoremap <C-\> :History<CR>
 command! -bang -nargs=* History call fzf#vim#history({'options': '--no-sort'})
 
@@ -325,7 +325,6 @@ if has("nvim")
   au TermOpen * tnoremap <Esc> <C-\><C-N>
   au FileType fzf tunmap <Esc>
 endif
-
 
 let g:closetag_xhtml_filetypes = 'xhtml,jsx,js'
 
