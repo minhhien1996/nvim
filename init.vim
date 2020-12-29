@@ -1,3 +1,4 @@
+let g:polyglot_disabled = ['ruby', 'javascript', 'jsx']
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'konfekt/fastfold'
@@ -64,10 +65,7 @@ Plug 'sheerun/vim-polyglot'
 " Plug 'preservim/nerdtree'
 " Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'ryanoasis/vim-devicons'
-Plug 'lambdalisue/fern.vim'
-Plug 'lambdalisue/fern-renderer-devicons.vim'
-Plug 'lambdalisue/fern-hijack.vim'
-Plug 'lambdalisue/fern-git-status.vim'
+Plug 'mcchrish/nnn.vim'
 
 " Other language
 Plug 'plasticboy/vim-markdown'
@@ -79,8 +77,6 @@ Plug 'blueyed/vim-diminactive'
 Plug 'camspiers/animate.vim'
 Plug 'camspiers/lens.vim'
 Plug 'antoinemadec/FixCursorHold.nvim'
-
-Plug 'justinmk/vim-sneak' 
 
 call plug#end()
 
@@ -131,7 +127,6 @@ let g:diminactive_use_colorcolumn = 0
 let g:diminactive_enable_focus = 1
 let g:diminactive_use_syntax = 1
 let g:diminactive_buftype_blacklist = ['nofile', 'nowrite', 'acwrite', 'quickfix', 'help']
-let g:diminactive_filetype_blacklist = ['fern']
 
 
 "for LanguageClient
@@ -294,8 +289,6 @@ let g:LanguageClient_diagnosticsMaxSeverity = "Error"
 " endfunction
 " nmap <C-O> :call OpenNerdTree()<CR>
 
-nmap <C-O> :Fern . -drawer -reveal=% -width=40 -keep<CR>
-
 " let g:NERDTreeHijackNetrw = 1
 " let g:NERDTreeIgnore = ['^node_modules$[[dir]]']
 " let g:NERDTreeShowLineNumbers = 1
@@ -328,54 +321,13 @@ endif
 
 let g:closetag_xhtml_filetypes = 'xhtml,jsx,js'
 
-let g:lens#disabled_filetypes = ['fzf', 'fern']
-let g:lens#width_resize_max = 100
-let g:lens#width_resize_min = 30
+let g:lens#disabled_filetypes = ['fzf']
+let g:lens#width_resize_max = 200
+let g:lens#width_resize_min = 50
 
 let g:indentLine_char = '│'
 let g:indentLine_color_term=240
 
-let g:sneak#label = 1
-
-let g:fern#renderer = "devicons"
-
-function! FernInit() abort
-  nmap <buffer><expr>
-        \ <Plug>(fern-my-open-expand-collapse)
-        \ fern#smart#leaf(
-        \   "\<Plug>(fern-action-open:select)",
-        \   "\<Plug>(fern-action-expand)",
-        \   "\<Plug>(fern-action-collapse)",
-        \ )
-  nmap <buffer> <CR> <Plug>(fern-my-open-expand-collapse)
-  nmap <buffer> n <Plug>(fern-action-new-path)
-  nmap <buffer> d <Plug>(fern-action-remove)
-  nmap <buffer> m <Plug>(fern-action-move)
-  nmap <buffer> M <Plug>(fern-action-rename)
-  nmap <buffer> h <Plug>(fern-action-hidden-toggle)
-  nmap <buffer> r <Plug>(fern-action-reload)
-  nmap <buffer> k <Plug>(fern-action-mark-toggle)
-  nmap <buffer> s <Plug>(fern-action-open:split)
-  nmap <buffer> v <Plug>(fern-action-open:vsplit)
-  nmap <buffer><nowait> < <Plug>(fern-action-leave)
-  nmap <buffer><nowait> > <Plug>(fern-action-enter)
-
-  augroup FernTypeGroup
-    autocmd! * <buffer>
-    autocmd BufEnter <buffer> silent execute "normal \<Plug>(fern-action-reload)"
-  augroup END
-endfunction
-
-augroup FernGroup
-  autocmd!
-  autocmd FileType fern call FernInit()
-augroup END
-
-let g:fern_git_status#disable_ignored    = 1
-let g:fern_git_status#disable_untracked  = 1
-let g:fern_git_status#disable_submodules = 1
-let g:fern#disable_default_mappings = 1
-let g:fern#disable_drawer_auto_winfixwidth = 1
 
 " colorizer.lua
 lua require'colorizer'.setup()
@@ -387,5 +339,14 @@ let g:fastfold_fdmhook = 0
 let g:fastfold_fold_command_suffixes = []
 let g:fastfold_fold_movement_commands = []
 
-let g:polyglot_disabled = ['ruby', 'javascript', 'jsx']
 let g:ruby_path="~/.rvm/bin/ruby"
+
+" Disable default mappings
+let g:nnn#set_default_mappings = 0
+" Start nnn in the current file's directory
+nnoremap <C-O> :NnnPicker %:p:h<CR>
+let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debug' } }
+let g:nnn#action = {
+      \ '<c-t>': 'tab split',
+      \ '<c-x>': 'split',
+      \ '<c-v>': 'vsplit' }
