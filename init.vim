@@ -344,9 +344,12 @@ let g:ruby_path="~/.rvm/bin/ruby"
 " Disable default mappings
 let g:nnn#set_default_mappings = 0
 " Start nnn in the current file's directory
-nnoremap <C-O> :NnnPicker %:p:h<CR>
+nnoremap <C-O> :NnnPicker<CR>
 let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debug' } }
 let g:nnn#action = {
       \ '<c-t>': 'tab split',
       \ '<c-x>': 'split',
       \ '<c-v>': 'vsplit' }
+let g:nnn#replace_netrw = 1
+" exit nnn
+au FileType nnn tnoremap <Esc> <C-G>
