@@ -14,7 +14,6 @@ Plug 'tpope/vim-endwise'
 Plug 'kassio/neoterm'
 
 Plug 'google/protobuf'
-Plug 'uber/prototool', { 'rtp':'vim/prototool' }
 
 Plug 'djoshea/vim-autoread'
 
@@ -62,10 +61,9 @@ Plug 'vim-ruby/vim-ruby'
 Plug 'sheerun/vim-polyglot'
 
 " Navigation
-" Plug 'preservim/nerdtree'
-" Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'preservim/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'ryanoasis/vim-devicons'
-Plug 'mcchrish/nnn.vim'
 
 " Other language
 Plug 'plasticboy/vim-markdown'
@@ -208,7 +206,6 @@ set fcs=eob:\
 let g:ale_linters = {
       \   'javascript': ['eslint'],
       \   'ruby': ['rubocop'],
-      \   'proto': ['prototool-lint'],
       \}
 
 let g:ale_fixers = {
@@ -276,24 +273,24 @@ let g:loaded_netrwPlugin = 1
 let g:LanguageClient_diagnosticsEnable = 0
 let g:LanguageClient_diagnosticsMaxSeverity = "Error"
 
-" let NERDTreeShowHidden=1
+let NERDTreeShowHidden=1
 
 " Toggle NERDTree
-" function! OpenNerdTree()
-"   " if nerdtreefind if nerdtree already opened
-"   if &modifiable && strlen(expand('%')) > 0 && !&diff
-"     NERDTreeFind
-"   else
-"     NERDTreeToggle
-"   endif
-" endfunction
-" nmap <C-O> :call OpenNerdTree()<CR>
+function! OpenNerdTree()
+  " if nerdtreefind if nerdtree already opened
+  if &modifiable && strlen(expand('%')) > 0 && !&diff
+    NERDTreeFind
+  else
+    NERDTreeToggle
+  endif
+endfunction
+nmap <C-O> :call OpenNerdTree()<CR>
 
-" let g:NERDTreeHijackNetrw = 1
-" let g:NERDTreeIgnore = ['^node_modules$[[dir]]']
-" let g:NERDTreeShowLineNumbers = 1
-" let g:NERDTreeMapOpenVSplit = '<C-V>'
-" let g:NERDTreeMapOpenSplit = '<C-X>'
+let g:NERDTreeHijackNetrw = 1
+let g:NERDTreeIgnore = ['^node_modules$[[dir]]']
+let g:NERDTreeShowLineNumbers = 1
+let g:NERDTreeMapOpenVSplit = '<C-V>'
+let g:NERDTreeMapOpenSplit = '<C-X>'
 
 let g:auto_save = 1
 let g:auto_save_events = ['CursorHold', 'BufLeave']
@@ -340,16 +337,3 @@ let g:fastfold_fold_command_suffixes = []
 let g:fastfold_fold_movement_commands = []
 
 let g:ruby_path="~/.rvm/bin/ruby"
-
-" Disable default mappings
-let g:nnn#set_default_mappings = 0
-" Start nnn in the current file's directory
-nnoremap <C-O> :NnnPicker<CR>
-let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debug' } }
-let g:nnn#action = {
-      \ '<c-t>': 'tab split',
-      \ '<c-x>': 'split',
-      \ '<c-v>': 'vsplit' }
-let g:nnn#replace_netrw = 1
-" exit nnn
-au FileType nnn tnoremap <Esc> <C-G>
