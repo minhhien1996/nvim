@@ -1,0 +1,32 @@
+{
+  "languageserver": {
+    "go": {
+      "command": "gopls",
+      "rootPatterns": [
+        "go.mod"
+      ],
+      "trace.server": "verbose",
+      "filetypes": [
+        "go"
+      ]
+    }
+  },
+  "eslint.autoFixOnSave": true,
+  "eslint.format.enable": true,
+  "eslint.packageManager": "yarn",
+  "coc.preferences.formatOnSaveFiletypes": [
+    "c",
+    "go",
+    "python",
+    "markdown",
+    "javascript",
+    "typescript",
+    "json",
+    "jsonc",
+    "ruby"
+  ],
+  "codeLens.enable": true,
+  "solargraph.useBundler": false,
+  "solargraph.autoformat": true,
+  "solargraph.formatting": true
+}

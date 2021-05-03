@@ -26,28 +26,10 @@ Plug 'junegunn/fzf.vim'
 " Statusline
 Plug 'itchyny/lightline.vim'
 Plug 'tpope/vim-fugitive'
-Plug 'maximbaz/lightline-ale'
-
-Plug 'dense-analysis/ale'
 
 Plug 'airblade/vim-gitgutter'
 
-" Autocomplete
-Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-path'
-Plug 'fgrsnau/ncm2-otherbuf'
-
-Plug 'autozimu/LanguageClient-neovim', {
-      \ 'branch': 'next',
-      \ 'do': 'bash install.sh',
-      \ }
-
 " Javascript
-" Plug 'mxw/vim-jsx'
-" Plug 'ap/vim-css-color'
-" Plug 'jparise/vim-graphql'
 Plug 'pangloss/vim-javascript'
 Plug 'chemzqm/vim-jsx-improve'
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
@@ -75,6 +57,12 @@ Plug 'blueyed/vim-diminactive'
 Plug 'camspiers/animate.vim'
 Plug 'camspiers/lens.vim'
 Plug 'antoinemadec/FixCursorHold.nvim'
+
+Plug 'kdheepak/lazygit.nvim'
+
+" COC
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'josa42/vim-lightline-coc'
 
 call plug#end()
 
@@ -129,16 +117,11 @@ let g:diminactive_buftype_blacklist = ['nofile', 'nowrite', 'acwrite', 'quickfix
 
 "for LanguageClient
 set hidden
-let g:LanguageClient_serverCommands = {
-      \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
-      \ 'javascript': ['typescript-language-server', '--stdio', '--log-level 1'],
-      \ 'javascript.jsx': ['typescript-language-server', '--stdio', '--log-level 1'],
-      \ 'typescript': ['typescript-language-server', '--stdio', '--log-level 1'],
-      \ }
-
-" enable ncm2 for all buffers
-autocmd BufEnter * call ncm2#enable_for_buffer()
-autocmd BufEnter * silent! ncm2#blacklist_for_buffer(['cwdpath', 'rootpath'])
+" let g:LanguageClient_serverCommands = {
+"       \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+"       \ 'javascript': ['typescript-language-server', '--stdio', '--log-level 1'],
+"       \ 'javascript.jsx': ['typescript-language-server', '--stdio', '--log-level 1'],
+"       \ 'typescript': ['typescript-language-server', '--stdio', '--log-level 1'],
 
 
 augroup ft_rb
@@ -146,11 +129,6 @@ augroup ft_rb
   " fix the SLOOOW syntax highlighting
   au FileType ruby setlocal re=1 foldmethod=indent foldlevel=15
 augroup END
-
-" IMPORTANT: :help Ncm2PopupOpen for more information
-set completeopt=noinsert,menuone,noselect
-let g:ncm2#complete_length=2
-
 
 " smooth scroll
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
@@ -202,29 +180,6 @@ call matchadd('ColorColumn', '\%121v.', -1)
 
 set fcs=eob:\ 
 
-" ale linter
-let g:ale_linters = {
-      \   'javascript': ['eslint'],
-      \   'ruby': ['rubocop'],
-      \}
-
-let g:ale_fixers = {
-      \   'javascript': ['eslint'],
-      \   'ruby': ['rubocop'],
-      \}
-let g:ale_ruby_rubocop_options = '--safe-auto-correct'
-
-let g:ale_fix_on_save = 1
-let g:ale_sign_error = '✘'
-let g:ale_sign_warning = '⚠'
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_save = 1
-let g:ale_lint_on_insert_leave = 1
-let g:ale_lint_on_enter = 0
-
-" highlight ALEErrorSign ctermbg=NONE ctermfg=red
-" highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
-
 " Commenter configs
 let g:NERDCompactSexyComs = 1
 let g:NERDSpaceDelims = 1
@@ -240,17 +195,22 @@ let g:lightline.component_function = {
       \   'gutentags': 'gutentags#statusline'
       \ }
 let g:lightline.component_expand = {
-      \   'linter_checking': 'lightline#ale#checking',
-      \   'linter_warnings': 'lightline#ale#warnings',
-      \   'linter_errors': 'lightline#ale#errors',
-      \   'linter_ok': 'lightline#ale#ok'
-      \ }
+  \   'linter_warnings': 'lightline#coc#warnings',
+  \   'linter_errors': 'lightline#coc#errors',
+  \   'linter_info': 'lightline#coc#info',
+  \   'linter_hints': 'lightline#coc#hints',
+  \   'linter_ok': 'lightline#coc#ok',
+  \   'status': 'lightline#coc#status',
+  \ }
+
+" Set color to the components:
 let g:lightline.component_type = {
-      \   'linter_checking': 'left',
-      \   'linter_warnings': 'warning',
-      \   'linter_errors': 'error',
-      \   'linter_ok': 'left'
-      \ }
+  \   'linter_warnings': 'warning',
+  \   'linter_errors': 'error',
+  \   'linter_info': 'info',
+  \   'linter_hints': 'hints',
+  \   'linter_ok': 'left',
+  \ }
 let g:lightline.active = {
       \   'left': [
       \     [ 'mode', 'paste' ],
@@ -318,9 +278,9 @@ endif
 
 let g:closetag_xhtml_filetypes = 'xhtml,jsx,js'
 
-let g:lens#disabled_filetypes = ['fzf']
+let g:lens#disabled_filetypes = ['fzf', 'nerdtree']
 let g:lens#width_resize_max = 200
-let g:lens#width_resize_min = 50
+let g:lens#width_resize_min = 100
 
 let g:indentLine_char = '│'
 let g:indentLine_color_term=240
@@ -337,3 +297,16 @@ let g:fastfold_fold_command_suffixes = []
 let g:fastfold_fold_movement_commands = []
 
 let g:ruby_path="~/.rvm/bin/ruby"
+let g:fzf_preview_window = ['right:50%', 'ctrl-/']
+let g:fzf_layout = { 'down': '40%' }
+
+let g:lazygit_floating_window_winblend = 0 " transparency of floating window
+let g:lazygit_floating_window_scaling_factor = 0.9 " scaling factor for floating window
+noremap <C-G> :LazyGit<CR>
+
+
+" COC
+let g:coc_global_extensions = ['coc-solargraph']
+let g:coc_user_config = {}
+let g:coc_user_config['coc.preferences.jumpCommand'] = ':SplitIfNotOpen4COC'
+call lightline#coc#register()
