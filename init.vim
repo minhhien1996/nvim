@@ -64,6 +64,9 @@ Plug 'kdheepak/lazygit.nvim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'josa42/vim-lightline-coc'
 
+Plug 'tssm/fairyfloss.vim'
+Plug 'joshdick/onedark.vim'
+
 call plug#end()
 
 syntax on
@@ -104,6 +107,7 @@ set redrawtime=10000
 set mouse=n
 set termguicolors
 set showmatch
+colorscheme onedark
 
 
 " let g:vimade = {}
@@ -117,11 +121,9 @@ let g:diminactive_buftype_blacklist = ['nofile', 'nowrite', 'acwrite', 'quickfix
 
 "for LanguageClient
 set hidden
-" let g:LanguageClient_serverCommands = {
-"       \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
-"       \ 'javascript': ['typescript-language-server', '--stdio', '--log-level 1'],
-"       \ 'javascript.jsx': ['typescript-language-server', '--stdio', '--log-level 1'],
-"       \ 'typescript': ['typescript-language-server', '--stdio', '--log-level 1'],
+let g:LanguageClient_serverCommands = {
+      \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+      \ }
 
 
 augroup ft_rb
@@ -310,3 +312,7 @@ let g:coc_global_extensions = ['coc-solargraph']
 let g:coc_user_config = {}
 let g:coc_user_config['coc.preferences.jumpCommand'] = ':SplitIfNotOpen4COC'
 call lightline#coc#register()
+
+nmap <silent> gs :call CocAction('jumpDefinition', 'split')<CR>
+nmap <silent> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
+nmap <silent> gt :call CocAction('jumpDefinition', 'tabe')<CR>
