@@ -1,4 +1,4 @@
-let g:polyglot_disabled = ['ruby', 'javascript', 'jsx']
+let g:polyglot_disabled = ['ruby', 'javascript', 'jsx', 'go']
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'konfekt/fastfold'
@@ -8,10 +8,10 @@ Plug 'jparise/vim-graphql'
 Plug 'tpope/vim-surround'
 Plug 'terryma/vim-smooth-scroll'
 Plug '907th/vim-auto-save'
-Plug 'cohama/lexima.vim' " auto close parentheses
 Plug 'tpope/vim-endwise'
+Plug 'jiangmiao/auto-pairs'
+Plug 'airblade/vim-localorie'
 
-Plug 'kassio/neoterm'
 
 Plug 'google/protobuf'
 
@@ -48,7 +48,6 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'ryanoasis/vim-devicons'
 
 " Other language
-Plug 'plasticboy/vim-markdown'
 Plug 'stephpy/vim-yaml'
 
 " Dim inactive
@@ -56,7 +55,7 @@ Plug 'blueyed/vim-diminactive'
 
 Plug 'camspiers/animate.vim'
 Plug 'camspiers/lens.vim'
-Plug 'antoinemadec/FixCursorHold.nvim'
+" Plug 'antoinemadec/FixCursorHold.nvim'
 
 Plug 'kdheepak/lazygit.nvim'
 
@@ -64,8 +63,11 @@ Plug 'kdheepak/lazygit.nvim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'josa42/vim-lightline-coc'
 
-Plug 'tssm/fairyfloss.vim'
 Plug 'joshdick/onedark.vim'
+Plug 'drewtempelmeyer/palenight.vim'
+
+Plug 'akinsho/nvim-toggleterm.lua'
+Plug 'npxbr/glow.nvim', {'do': ':GlowInstall', 'branch': 'main'}
 
 call plug#end()
 
@@ -98,20 +100,18 @@ set nofoldenable
 set encoding=UTF-8
 set autowrite
 " set cursorline!
-set synmaxcol=250
+set synmaxcol=2000
 set re=1
 set noswapfile
 " syntax sync fromstart
 " syntax sync minlines=200
 set redrawtime=10000
-set mouse=n
+" set mouse=n
 set termguicolors
 set showmatch
-colorscheme onedark
-
-
-" let g:vimade = {}
-" let g:vimade.detecttermcolors = 1
+set hidden
+set background=dark
+colorscheme palenight
 
 let g:diminactive_use_colorcolumn = 0
 let g:diminactive_enable_focus = 1
@@ -120,15 +120,14 @@ let g:diminactive_buftype_blacklist = ['nofile', 'nowrite', 'acwrite', 'quickfix
 
 
 "for LanguageClient
-set hidden
 let g:LanguageClient_serverCommands = {
       \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
       \ }
 
 
+" fix the SLOOOW syntax highlighting
 augroup ft_rb
   au!
-  " fix the SLOOOW syntax highlighting
   au FileType ruby setlocal re=1 foldmethod=indent foldlevel=15
 augroup END
 
@@ -152,15 +151,9 @@ nnoremap <C-_> :nohl<CR>
 " FZF
 nnoremap <C-P> :GFiles<CR>
 nnoremap <C-F> :Rg<CR>
-nnoremap <C-B> :Buffer<CR>
+nnoremap <C-B> :BLines<CR>
 nnoremap <C-\> :History<CR>
 command! -bang -nargs=* History call fzf#vim#history({'options': '--no-sort'})
-
-" copy paste clipboard
-" nnoremap <C-y> "+y
-" vnoremap <C-y> "+y
-" nnoremap <C-p> "+gP
-" vnoremap <C-p> "+gP
 
 " commenter
 nmap // <leader>c<space>
@@ -191,7 +184,7 @@ let g:NERDTrimTrailingWhitespace = 1
 
 " Statusline configs
 let g:lightline = {}
-" let g:lightline.colorscheme = 'dracula'
+let g:lightline.colorscheme = 'palenight'
 let g:lightline.component_function = {
       \   'gitbranch': 'fugitive#head',
       \   'gutentags': 'gutentags#statusline'
@@ -256,33 +249,20 @@ let g:NERDTreeMapOpenSplit = '<C-X>'
 
 let g:auto_save = 1
 let g:auto_save_events = ['CursorHold', 'BufLeave']
-let g:cursorhold_updatetime = 2000
+" let g:cursorhold_updatetime = 2000
 
 let g:diminactive_enable_focus = 1
 
-" NeoTerm
-nmap <C-T> :Topen<CR>
-tnoremap <C-Q>  <C-\><C-N> :Tclose<CR>
-tnoremap <C-R> :Tclear<CR>
-noremap <C-Q> :Tclose<CR>
 
-let g:neoterm_default_mod = ':vertical'
-let g:neoterm_size = 80
-let g:neoterm_autoscroll = 1
-let g:neoterm_autoinsert = 1
-let g:neoterm_keep_term_open = 0
-
-" ESC to exit terminal mode, but not conflict FZF
-if has("nvim")
-  au TermOpen * tnoremap <Esc> <C-\><C-N>
-  au FileType fzf tunmap <Esc>
-endif
+let g:toggleterm_terminal_mapping = '<C-T>'
+nnoremap <silent><c-t> <Cmd>exe v:count1 . "ToggleTerm"<CR>
+inoremap <silent><c-t> <Esc><Cmd>exe v:count1 . "ToggleTerm"<CR>
 
 let g:closetag_xhtml_filetypes = 'xhtml,jsx,js'
 
-let g:lens#disabled_filetypes = ['fzf', 'nerdtree']
-let g:lens#width_resize_max = 200
-let g:lens#width_resize_min = 100
+let g:lens#disabled_filetypes = ['fzf', 'nerdtree', 'toggleterm']
+let g:lens#width_resize_max = 160
+let g:lens#width_resize_min = 60
 
 let g:indentLine_char = '│'
 let g:indentLine_color_term=240
@@ -316,3 +296,28 @@ call lightline#coc#register()
 nmap <silent> gs :call CocAction('jumpDefinition', 'split')<CR>
 nmap <silent> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
 nmap <silent> gt :call CocAction('jumpDefinition', 'tabe')<CR>
+
+lua << EOF
+require("toggleterm").setup{
+  -- size can be a number or function which is passed the current terminal
+  size = function(term)
+    local size
+    if term.direction == "horizontal" then
+      return 15
+    elseif term.direction == "vertical" then
+      return math.min(vim.o.columns * 0.5, 120)
+    end
+  end,
+  hide_numbers = true, -- hide the number column in toggleterm buffers
+  shade_terminals = true,
+  start_in_insert = true,
+  insert_mappings = true, -- whether or not the open mapping applies in insert mode
+  persist_size = true,
+  direction = 'vertical',
+  close_on_exit = true, -- close the terminal window when the process exits
+  shade_filetypes = { "none", "fzf" }
+}
+EOF
+
+" show yaml path at cursor
+autocmd CursorMoved *.yml echo localorie#expand_key()
