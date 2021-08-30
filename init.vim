@@ -13,6 +13,8 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'airblade/vim-localorie'
 
 
+Plug 'mhinz/vim-startify'
+
 Plug 'google/protobuf'
 
 Plug 'djoshea/vim-autoread'
@@ -296,6 +298,7 @@ call lightline#coc#register()
 nmap <silent> gs :call CocAction('jumpDefinition', 'split')<CR>
 nmap <silent> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
 nmap <silent> gt :call CocAction('jumpDefinition', 'tabe')<CR>
+nmap <silent> gn :call CocAction('diagnosticNext')<CR>
 
 lua << EOF
 require("toggleterm").setup{
@@ -310,7 +313,6 @@ require("toggleterm").setup{
   end,
   hide_numbers = true, -- hide the number column in toggleterm buffers
   shade_terminals = true,
-  start_in_insert = true,
   insert_mappings = true, -- whether or not the open mapping applies in insert mode
   persist_size = true,
   direction = 'vertical',
@@ -321,3 +323,16 @@ EOF
 
 " show yaml path at cursor
 autocmd CursorMoved *.yml echo localorie#expand_key()
+autocmd CursorMoved *.yaml echo localorie#expand_key()
+
+nnoremap n nzzzv
+nnoremap N Nzzzv
+nnoremap J mZJ`z
+
+" ESC to exit terminal mode, but not conflict FZF
+if has("nvim")
+      au TermOpen * tnoremap <Esc> <C-\><C-N>
+      au FileType fzf tunmap <Esc>
+endif
+
+let g:startify_change_to_dir = 0
