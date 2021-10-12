@@ -1,4 +1,4 @@
-let g:polyglot_disabled = ['ruby', 'javascript', 'jsx', 'go']
+let g:polyglot_disabled = ['ruby', 'javascript', 'jsx', 'go', 'yaml', 'yml']
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'konfekt/fastfold'
@@ -10,8 +10,8 @@ Plug 'terryma/vim-smooth-scroll'
 Plug '907th/vim-auto-save'
 Plug 'tpope/vim-endwise'
 Plug 'jiangmiao/auto-pairs'
-Plug 'airblade/vim-localorie'
 
+Plug 'lmeijvogel/vim-yaml-helper'
 
 Plug 'mhinz/vim-startify'
 
@@ -39,7 +39,7 @@ Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'norcalli/nvim-colorizer.lua'
 
 " Ruby
-Plug 'vim-ruby/vim-ruby'
+" Plug 'vim-ruby/vim-ruby'
 
 " every other languages
 Plug 'sheerun/vim-polyglot'
@@ -50,10 +50,11 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'ryanoasis/vim-devicons'
 
 " Other language
-Plug 'stephpy/vim-yaml'
+" Plug 'stephpy/vim-yaml'
 
 " Dim inactive
-Plug 'blueyed/vim-diminactive'
+" Plug 'blueyed/vim-diminactive'
+Plug 'sunjon/shade.nvim'
 
 Plug 'camspiers/animate.vim'
 Plug 'camspiers/lens.vim'
@@ -67,6 +68,7 @@ Plug 'josa42/vim-lightline-coc'
 
 Plug 'joshdick/onedark.vim'
 Plug 'drewtempelmeyer/palenight.vim'
+Plug 'srcery-colors/srcery-vim'
 
 Plug 'akinsho/nvim-toggleterm.lua'
 Plug 'npxbr/glow.nvim', {'do': ':GlowInstall', 'branch': 'main'}
@@ -98,40 +100,32 @@ set lazyredraw
 set ttyfast
 set foldmethod=indent
 set nofoldenable
-" set wrap!
+set wrap!
 set encoding=UTF-8
 set autowrite
 " set cursorline!
 set synmaxcol=2000
-set re=1
+set re=2
 set noswapfile
 " syntax sync fromstart
 " syntax sync minlines=200
-set redrawtime=10000
+set redrawtime=9999
 " set mouse=n
 set termguicolors
 set showmatch
 set hidden
 set background=dark
-colorscheme palenight
+colorscheme srcery
 
-let g:diminactive_use_colorcolumn = 0
-let g:diminactive_enable_focus = 1
-let g:diminactive_use_syntax = 1
-let g:diminactive_buftype_blacklist = ['nofile', 'nowrite', 'acwrite', 'quickfix', 'help']
-
+" let g:diminactive_use_colorcolumn = 0
+" let g:diminactive_enable_focus = 1
+" let g:diminactive_use_syntax = 1
+" let g:diminactive_buftype_blacklist = ['nofile', 'nowrite', 'acwrite', 'quickfix', 'help']
 
 "for LanguageClient
-let g:LanguageClient_serverCommands = {
-      \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
-      \ }
-
-
-" fix the SLOOOW syntax highlighting
-augroup ft_rb
-  au!
-  au FileType ruby setlocal re=1 foldmethod=indent foldlevel=15
-augroup END
+" let g:LanguageClient_serverCommands = {
+"       \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+"       \ }
 
 " smooth scroll
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
@@ -169,7 +163,7 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 highlight CursorLine gui=underline cterm=underline ctermfg=None guifg=None
 highlight ColorColumn ctermbg=darkgray guibg=darkgray
 highlight MatchParen cterm=underline ctermbg=none ctermfg=green
-highlight Visual  ctermfg=black ctermbg=cyan gui=none
+" highlight Visual  ctermfg=black ctermbg=cyan gui=none
 " highlight Directory guifg=cyan ctermfg=cyan
 
 " colorize the 121th char for long line notice
@@ -186,7 +180,7 @@ let g:NERDTrimTrailingWhitespace = 1
 
 " Statusline configs
 let g:lightline = {}
-let g:lightline.colorscheme = 'palenight'
+let g:lightline.colorscheme = 'srcery'
 let g:lightline.component_function = {
       \   'gitbranch': 'fugitive#head',
       \   'gutentags': 'gutentags#statusline'
@@ -253,7 +247,6 @@ let g:auto_save = 1
 let g:auto_save_events = ['CursorHold', 'BufLeave']
 " let g:cursorhold_updatetime = 2000
 
-let g:diminactive_enable_focus = 1
 
 
 let g:toggleterm_terminal_mapping = '<C-T>'
@@ -273,7 +266,8 @@ let g:indentLine_color_term=240
 " colorizer.lua
 lua require'colorizer'.setup()
 
-let g:ruby_fold = 1
+" let g:ruby_fold = 1
+
 nmap zuz <Plug>(FastFoldUpdate)
 let g:fastfold_savehook = 0
 let g:fastfold_fdmhook = 0
@@ -321,9 +315,6 @@ require("toggleterm").setup{
 }
 EOF
 
-" show yaml path at cursor
-autocmd CursorMoved *.yml echo localorie#expand_key()
-autocmd CursorMoved *.yaml echo localorie#expand_key()
 
 nnoremap n nzzzv
 nnoremap N Nzzzv
@@ -336,3 +327,11 @@ if has("nvim")
 endif
 
 let g:startify_change_to_dir = 0
+
+lua << EOF
+require'shade'.setup({
+  overlay_opacity = 30,
+})
+EOF
+
+let g:vim_yaml_helper#auto_display_path = 1
