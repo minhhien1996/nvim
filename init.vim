@@ -13,8 +13,6 @@ Plug 'jiangmiao/auto-pairs'
 
 Plug 'lmeijvogel/vim-yaml-helper'
 
-Plug 'mhinz/vim-startify'
-
 Plug 'google/protobuf'
 
 Plug 'djoshea/vim-autoread'
@@ -53,8 +51,8 @@ Plug 'ryanoasis/vim-devicons'
 " Plug 'stephpy/vim-yaml'
 
 " Dim inactive
-" Plug 'blueyed/vim-diminactive'
-Plug 'sunjon/shade.nvim'
+Plug 'blueyed/vim-diminactive'
+" Plug 'sunjon/shade.nvim'
 
 Plug 'camspiers/animate.vim'
 Plug 'camspiers/lens.vim'
@@ -72,6 +70,12 @@ Plug 'srcery-colors/srcery-vim'
 
 Plug 'akinsho/nvim-toggleterm.lua'
 Plug 'npxbr/glow.nvim', {'do': ':GlowInstall', 'branch': 'main'}
+
+" find and replace
+Plug 'nvim-lua/plenary.nvim'
+Plug 'windwp/nvim-spectre'
+
+Plug 'lewis6991/impatient.nvim'
 
 call plug#end()
 
@@ -117,15 +121,10 @@ set hidden
 set background=dark
 colorscheme srcery
 
-" let g:diminactive_use_colorcolumn = 0
-" let g:diminactive_enable_focus = 1
-" let g:diminactive_use_syntax = 1
-" let g:diminactive_buftype_blacklist = ['nofile', 'nowrite', 'acwrite', 'quickfix', 'help']
-
-"for LanguageClient
-" let g:LanguageClient_serverCommands = {
-"       \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
-"       \ }
+let g:diminactive_use_colorcolumn = 0
+let g:diminactive_enable_focus = 1
+let g:diminactive_use_syntax = 1
+let g:diminactive_buftype_blacklist = ['nofile', 'nowrite', 'acwrite', 'quickfix', 'help']
 
 " smooth scroll
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
@@ -328,10 +327,17 @@ endif
 
 let g:startify_change_to_dir = 0
 
-lua << EOF
-require'shade'.setup({
-  overlay_opacity = 30,
-})
-EOF
+" lua << EOF
+" require'shade'.setup({
+"   overlay_opacity = 30,
+" })
+" EOF
 
 let g:vim_yaml_helper#auto_display_path = 1
+
+
+nnoremap <C-s> :lua require('spectre').open()<CR>
+
+lua <<  EOF
+require('impatient')
+EOF
