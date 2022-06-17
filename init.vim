@@ -104,7 +104,7 @@ set lazyredraw
 set ttyfast
 set foldmethod=indent
 set nofoldenable
-set wrap!
+set wrap
 set encoding=UTF-8
 set autowrite
 " set cursorline!
@@ -112,7 +112,7 @@ set synmaxcol=2000
 set re=2
 set noswapfile
 " syntax sync fromstart
-" syntax sync minlines=200
+syntax sync minlines=1000
 set redrawtime=9999
 " set mouse=n
 set termguicolors
@@ -214,7 +214,7 @@ let g:lightline.active = {
       \   ]
       \ }
 
-let g:python3_host_prog='/usr/local/bin/python3'
+let g:python3_host_prog='/opt/homebrew/bin/python3'
 let g:python_host_prog='/usr/local/bin/python2'
 
 let g:loaded_netrw = 1
