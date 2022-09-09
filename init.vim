@@ -114,12 +114,12 @@ set noswapfile
 " syntax sync fromstart
 syntax sync minlines=1000
 set redrawtime=9999
-" set mouse=n
+set mouse=""
 set termguicolors
 set showmatch
 set hidden
 set background=dark
-colorscheme srcery
+" colorscheme srcery
 
 let g:diminactive_use_colorcolumn = 0
 let g:diminactive_enable_focus = 1
@@ -138,7 +138,7 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-nnoremap <C-_> :nohl<CR>
+nnoremap <C-?> :nohl<CR>
 
 " correct ident on paste
 :nnoremap p p=`]
@@ -155,8 +155,9 @@ nmap // <leader>c<space>
 vmap // <leader>c<space>
 
 " Use <TAB> to select the popup menu:
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <Tab> coc#pum#visible() ? coc#pum#next(1) : "\<Tab>"
+inoremap <expr> <S-Tab> coc#pum#visible() ? coc#pum#prev(1) : "\<S-Tab>"
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 highlight CursorLine gui=underline cterm=underline ctermfg=None guifg=None
@@ -179,7 +180,7 @@ let g:NERDTrimTrailingWhitespace = 1
 
 " Statusline configs
 let g:lightline = {}
-let g:lightline.colorscheme = 'srcery'
+" let g:lightline.colorscheme = 'srcery'
 let g:lightline.component_function = {
       \   'gitbranch': 'fugitive#head',
       \   'gutentags': 'gutentags#statusline'
@@ -283,7 +284,7 @@ noremap <C-G> :LazyGit<CR>
 
 
 " COC
-let g:coc_global_extensions = ['coc-solargraph']
+let g:coc_global_extensions = ['coc-solargraph', 'coc-omnisharp', 'coc-tsserver']
 let g:coc_user_config = {}
 let g:coc_user_config['coc.preferences.jumpCommand'] = ':SplitIfNotOpen4COC'
 call lightline#coc#register()

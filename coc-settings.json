@@ -9,6 +9,11 @@
       "filetypes": [
         "go"
       ]
+    },
+    "csharp-ls": {
+      "command": "csharp-ls",
+      "filetypes": ["cs"],
+      "rootPatterns": ["*.csproj", ".vim/", ".git/", ".hg/"]
     }
   },
   "eslint.autoFixOnSave": true,
@@ -31,5 +36,8 @@
   "solargraph.formatting": true,
   "solargraph.diagnostics": true,
   "solargraph.hover": true,
-  "solargraph.completion": true
+  "solargraph.completion": true,
+  "omnisharp.version": "v1.37.3",
+  "omnisharp.trace.server": "information",
+  "omnisharp.debug.server": true
 }
