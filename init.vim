@@ -58,8 +58,6 @@ Plug 'camspiers/animate.vim'
 Plug 'camspiers/lens.vim'
 " Plug 'antoinemadec/FixCursorHold.nvim'
 
-Plug 'kdheepak/lazygit.nvim'
-
 " COC
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'josa42/vim-lightline-coc'
@@ -76,6 +74,12 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'windwp/nvim-spectre'
 
 Plug 'lewis6991/impatient.nvim'
+
+Plug 'catppuccin/nvim', {'as': 'catppuccin'}
+
+Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
+" fzf-lua for icon support
+Plug 'kyazdani42/nvim-web-devicons'
 
 call plug#end()
 
@@ -121,10 +125,10 @@ set hidden
 set background=dark
 " colorscheme srcery
 
-let g:diminactive_use_colorcolumn = 0
-let g:diminactive_enable_focus = 1
-let g:diminactive_use_syntax = 1
-let g:diminactive_buftype_blacklist = ['nofile', 'nowrite', 'acwrite', 'quickfix', 'help']
+" let g:diminactive_use_colorcolumn = 0
+" let g:diminactive_enable_focus = 1
+" let g:diminactive_use_syntax = 1
+" let g:diminactive_buftype_blacklist = ['nofile', 'nowrite', 'acwrite', 'quickfix', 'help']
 
 " smooth scroll
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll*2, 0, 4)<CR>
@@ -144,11 +148,16 @@ nnoremap <C-?> :nohl<CR>
 :nnoremap p p=`]
 
 " FZF
-nnoremap <C-P> :GFiles<CR>
-nnoremap <C-F> :Rg<CR>
-nnoremap <C-B> :BLines<CR>
-nnoremap <C-\> :History<CR>
-command! -bang -nargs=* History call fzf#vim#history({'options': '--no-sort'})
+" nnoremap <C-P> :GFiles<CR>
+nnoremap <C-P> <cmd>lua require('fzf-lua').git_files()<CR>
+" nnoremap <C-F> :Rg<CR>
+nnoremap <C-F> <cmd>lua require('fzf-lua').live_grep_glob()<CR>
+" nnoremap <C-B> :BLines<CR>
+nnoremap <C-B> <cmd>lua require('fzf-lua').buffers()<CR>
+" nnoremap <C-\> :History<CR>
+nnoremap <C-\> <cmd>lua require('fzf-lua').oldfiles()<CR>
+" command! -bang -nargs=* History call fzf#vim#history({'options': '--no-sort'})
+nnoremap <C-S> <cmd>lua require('fzf-lua').resume()<CR>
 
 " commenter
 nmap // <leader>c<space>
@@ -255,7 +264,7 @@ inoremap <silent><c-t> <Esc><Cmd>exe v:count1 . "ToggleTerm"<CR>
 
 let g:closetag_xhtml_filetypes = 'xhtml,jsx,js'
 
-let g:lens#disabled_filetypes = ['fzf', 'nerdtree', 'toggleterm']
+let g:lens#disabled_filetypes = ['fzf', 'nerdtree', 'toggleterm', 'terminal']
 let g:lens#width_resize_max = 160
 let g:lens#width_resize_min = 60
 
@@ -277,10 +286,6 @@ let g:fastfold_fold_movement_commands = []
 let g:ruby_path="~/.rvm/bin/ruby"
 let g:fzf_preview_window = ['right:50%', 'ctrl-/']
 let g:fzf_layout = { 'down': '40%' }
-
-let g:lazygit_floating_window_winblend = 0 " transparency of floating window
-let g:lazygit_floating_window_scaling_factor = 0.9 " scaling factor for floating window
-noremap <C-G> :LazyGit<CR>
 
 
 " COC
@@ -337,8 +342,30 @@ let g:startify_change_to_dir = 0
 let g:vim_yaml_helper#auto_display_path = 1
 
 
-nnoremap <C-s> :lua require('spectre').open()<CR>
+" nnoremap <C-s> :lua require('spectre').open()<CR>
 
 lua <<  EOF
 require('impatient')
+EOF
+
+
+let g:catppuccin_flavour = "macchiato" " latte, frappe, macchiato, mocha
+lua << EOF
+require("catppuccin").setup({
+  transparent_background = true,
+  dim_inactive = {
+    enabled = true,
+    shade = "light",
+    percentage = 0.75,
+  },
+})
+EOF
+colorscheme catppuccin
+
+lua << EOF
+require('fzf-lua').setup{
+  winopts = {
+    split = "belowright new"  
+  }
+}
 EOF
